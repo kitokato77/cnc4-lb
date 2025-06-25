@@ -5,7 +5,7 @@ import requests
 import urllib.parse
 
 GAME_SERVERS = [
-    'https://game-server-abc.up.railway.app',
+    'https://web-production-f4f7f.up.railway.app/',
 ]
 server_index = 0
 server_lock = threading.Lock()
