@@ -2,13 +2,11 @@ import http.server
 import socketserver
 import threading
 import requests
-import subprocess
 import time
+from game_server import run_game_server
 
-# Jalankan game_server.py secara otomatis
-subprocess.Popen(["python", "game_server.py"])
-
-# Tunggu sebentar agar game_server.py sempat listen
+# Jalankan game_server sebagai thread
+threading.Thread(target=run_game_server, daemon=True).start()
 time.sleep(2)
 
 GAME_SERVERS = ['http://localhost:5001']
