@@ -2,11 +2,16 @@ import http.server
 import socketserver
 import threading
 import requests
-import urllib.parse
+import subprocess
+import time
 
-GAME_SERVERS = [
-    'https://web-production-f4f7f.up.railway.app/',
-]
+# Jalankan game_server.py secara otomatis
+subprocess.Popen(["python", "game_server.py"])
+
+# Tunggu sebentar agar game_server.py sempat listen
+time.sleep(2)
+
+GAME_SERVERS = ['http://localhost:5001']
 server_index = 0
 server_lock = threading.Lock()
 
@@ -20,22 +25,22 @@ class LoadBalancerHandler(http.server.BaseHTTPRequestHandler):
         global server_index
         with server_lock:
             for _ in range(len(GAME_SERVERS)):
-                port = GAME_SERVERS[server_index]
+                url = GAME_SERVERS[server_index]
                 server_index = (server_index + 1) % len(GAME_SERVERS)
                 try:
-                    requests.get(f'http://localhost:{port}/game_state', timeout=0.5)
-                    return port
+                    requests.get(f'{url}/game_state', timeout=0.5)
+                    return url
                 except Exception:
                     continue
             return None
 
     def do_POST(self):
-        port = self.get_next_server()
-        if port is None:
+        server = self.get_next_server()
+        if server is None:
             self._set_headers(503)
             self.wfile.write(b'{"error": "No game server available"}')
             return
-        url = f'http://localhost:{port}{self.path}'
+        url = f'{server}{self.path}'
         length = int(self.headers.get('Content-Length', 0))
         body = self.rfile.read(length)
         try:
@@ -47,12 +52,12 @@ class LoadBalancerHandler(http.server.BaseHTTPRequestHandler):
             self.wfile.write(b'{"error": "Game server unavailable"}')
 
     def do_GET(self):
-        port = self.get_next_server()
-        if port is None:
+        server = self.get_next_server()
+        if server is None:
             self._set_headers(503)
             self.wfile.write(b'{"error": "No game server available"}')
             return
-        url = f'http://localhost:{port}{self.path}'
+        url = f'{server}{self.path}'
         try:
             resp = requests.get(url, timeout=3)
             self._set_headers(resp.status_code)
@@ -62,10 +67,8 @@ class LoadBalancerHandler(http.server.BaseHTTPRequestHandler):
             self.wfile.write(b'{"error": "Game server unavailable"}')
 
 if __name__ == '__main__':
-    import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--port', type=int, default=8080)
-    args = parser.parse_args()
-    with socketserver.ThreadingTCPServer(("", args.port), LoadBalancerHandler) as httpd:
-        print(f"Load balancer running on port {args.port}")
+    import os
+    port = int(os.getenv("PORT", 8080))
+    with socketserver.ThreadingTCPServer(("", port), LoadBalancerHandler) as httpd:
+        print(f"Load balancer running on port {port}")
         httpd.serve_forever()
