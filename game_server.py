@@ -190,6 +190,13 @@ def check_win(board, row, col, player):
         if total >= 4:
             return True
     return False
+    
+def run_game_server():
+    port = 5001
+    with socketserver.ThreadingTCPServer(("", port), GameServerHandler) as httpd:
+        print(f"Game server running on port {port}")
+        httpd.serve_forever()
+
 
 if __name__ == '__main__':
     import os
