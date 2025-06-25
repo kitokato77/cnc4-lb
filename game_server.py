@@ -192,6 +192,7 @@ def check_win(board, row, col, player):
     return False
     
 def run_game_server():
+    print("[INFO] run_game_server() called")
     port = 5001
     with socketserver.ThreadingTCPServer(("", port), GameServerHandler) as httpd:
         print(f"Game server running on port {port}")
