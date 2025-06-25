@@ -3,10 +3,12 @@ import socketserver
 import threading
 import requests
 import time
+print("[INFO] Loading load_balancer.py")
 from game_server import run_game_server
 
 # Jalankan game_server sebagai thread
 threading.Thread(target=run_game_server, daemon=True).start()
+print("[INFO] Game server started as thread")
 time.sleep(2)
 
 GAME_SERVERS = ['http://localhost:5001']
