@@ -192,10 +192,8 @@ def check_win(board, row, col, player):
     return False
 
 if __name__ == '__main__':
-    import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--port', type=int, default=5001)
-    args = parser.parse_args()
-    with socketserver.ThreadingTCPServer(("", args.port), GameServerHandler) as httpd:
-        print(f"Serving on port {args.port}")
+    import os
+    port = 5001  # Tetap pakai port tetap karena load_balancer akan panggil ini
+    with socketserver.ThreadingTCPServer(("", port), GameServerHandler) as httpd:
+        print(f"Game server running on port {port}")
         httpd.serve_forever()
