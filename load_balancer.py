@@ -62,7 +62,7 @@ class LoadBalancerHandler(http.server.BaseHTTPRequestHandler):
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--port', type=int, default=5000)
+    parser.add_argument('--port', type=int, default=8080)
     args = parser.parse_args()
     with socketserver.ThreadingTCPServer(("", args.port), LoadBalancerHandler) as httpd:
         print(f"Load balancer running on port {args.port}")
