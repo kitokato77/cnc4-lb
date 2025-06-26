@@ -22,11 +22,11 @@ class LoadBalancerHandler(http.server.BaseHTTPRequestHandler):
         global server_index
         with server_lock:
             for _ in range(len(GAME_SERVERS)):
-                port = GAME_SERVERS[server_index]
+                url = GAME_SERVERS[server_index]
                 server_index = (server_index + 1) % len(GAME_SERVERS)
                 try:
-                    requests.get(f'http://localhost:{port}/game_state', timeout=0.5)
-                    return port
+                    requests.get(f'{url}/game_state', timeout=1)
+                    return url
                 except Exception:
                     continue
             return None
