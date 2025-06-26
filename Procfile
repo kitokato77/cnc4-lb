@@ -1,1 +1,1 @@
-﻿web: python load_balancer.py
+web: python load_balancer.py
