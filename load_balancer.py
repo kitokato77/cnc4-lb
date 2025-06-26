@@ -5,8 +5,8 @@ import requests
 import urllib.parse
 
 GAME_SERVERS = [
-    'https://game-server-1.up.railway.app',
-    'https://game-server-2.up.railway.app'
+    'https://web-production-f4f7f.up.railway.app',
+    'https://cnc4-gs2-production.up.railway.app'
 ]
 
 server_index = 0
