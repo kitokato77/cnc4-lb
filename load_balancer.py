@@ -37,7 +37,7 @@ class LoadBalancerHandler(http.server.BaseHTTPRequestHandler):
             self._set_headers(503)
             self.wfile.write(b'{"error": "No game server available"}')
             return
-        url = f'http://localhost:{port}{self.path}'
+        url = f'{port}{self.path}'  # karena 'port' sekarang berisi URL
         length = int(self.headers.get('Content-Length', 0))
         body = self.rfile.read(length)
         try:
@@ -54,7 +54,7 @@ class LoadBalancerHandler(http.server.BaseHTTPRequestHandler):
             self._set_headers(503)
             self.wfile.write(b'{"error": "No game server available"}')
             return
-        url = f'http://localhost:{port}{self.path}'
+        url = f'{port}{self.path}'  # karena 'port' sekarang berisi URL
         try:
             resp = requests.get(url, timeout=3)
             self._set_headers(resp.status_code)
