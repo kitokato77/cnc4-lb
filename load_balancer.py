@@ -7,8 +7,8 @@ import os
 
 # Game servers akan menggunakan Railway internal URLs
 GAME_SERVERS = [
-    os.getenv('GAME_SERVER_1_URL', 'https://cnc4-gs1-production.up.railway.app'),
-    os.getenv('GAME_SERVER_2_URL', 'https://cnc4-gs2-production.up.railway.app')
+    os.getenv('GAME_SERVER_1_URL', 'http://localhost:5001'),
+    os.getenv('GAME_SERVER_2_URL', 'http://localhost:5002')
 ]
 server_index = 0
 server_lock = threading.Lock()
